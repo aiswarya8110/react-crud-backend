@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "test": "jest",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "build": "npm install"
   },
   "keywords": [
     "node.js",
