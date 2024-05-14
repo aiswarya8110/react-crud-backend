@@ -3,7 +3,6 @@ const { User } = require("../models/models");
 const authMiddleware = async(req, res, next)=>{
     try{
         const { token }= req.cookies;
-        console.log("RECEIVED TOKEN",token);
         if(!token){
             throw new Error();
         }

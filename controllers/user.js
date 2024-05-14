@@ -8,17 +8,26 @@ const createUser = async(req, res)=>{
         const existingUser = await User.findOne({email});
 
         if(existingUser){
-            return res.status(400).send("Email already exists.")
+            return res.status(400).send({"errorMsg": "Email already exists."})
         }
 
         const encodedPassword = await bcrypt.hash(password, 8);
 
-        await User.create({email, password: encodedPassword});
-        res.send({"message": "User created in the database"});
+        const newUser = await User.create({email, password: encodedPassword});
+        console.log(newUser);
+        const token = jwt.sign({_id: newUser._id}, process.env.JWT_SECRET_KEY);
+
+        newUser.token = token;
+        await newUser.save();
+
+        return res.cookie("token", token,{
+            secure: true,
+            httpOnly: true
+        }).send({"successMsg": "user created"})
     }
     catch(err){
         console.log(err);
-        res.status(500).send({"message":"Unable to register user. Please try Again!"})
+        res.status(500).send({"errorMsg":"Unable to register user. Please try Again!"})
     }
 }
 
